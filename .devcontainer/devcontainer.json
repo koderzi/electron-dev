@@ -1,0 +1,15 @@
+{
+    "name": "electron-dev",
+    "dockerFile": "docker/dockerFile",
+    "customizations": {
+        "vscode": {
+            "settings": {
+                "git.ignoreMissingGitWarning": true
+            },
+            "extensions": [
+                "eamodio.gitlens",
+                "MichaelCurrin.auto-commit-msg"
+            ]
+        }
+    }
+}
