@@ -1,6 +1,13 @@
 {
     "name": "electron-dev",
     "dockerFile": "docker/dockerFile",
+    "runArgs": [
+        "-v",
+        "/tmp/.X11-unix:/tmp/.X11-unix",
+        "-e",
+        "DISPLAY=unix$DISPLAY",
+        "-it"
+    ],
     "customizations": {
         "vscode": {
             "settings": {
