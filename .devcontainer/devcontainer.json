@@ -6,6 +6,9 @@
     "runArgs": [
         "--privileged"
     ],
+    "containerEnv": {
+        "DISPLAY": ":1"
+    },
     "forwardPorts": [
         "5900:5900"
     ],

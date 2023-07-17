@@ -9,9 +9,7 @@ RUN apt-get -y install libglib2.0-dev libnss3 libatk1.0-0 libatk-bridge2.0-0 lib
 
 # Set the display number and start Xvfb
 ENV DISPLAY=:1
-CMD Xvfb $DISPLAY -screen 0 1024x768x16 & \
-    sleep 5 && \
-    x11vnc -display $DISPLAY -nopw -forever
+CMD Xvfb $DISPLAY -screen 0 1024x768x16 &
 
 # Expose the VNC port
 EXPOSE 5900
