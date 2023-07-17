@@ -3,6 +3,9 @@
     "dockerFile": "docker/dockerFile",
     "workspaceFolder": "/",
     "shutdownAction": "stopContainer",
+    "runArgs": [
+        "--privileged"
+    ],
     "customizations": {
         "vscode": {
             "settings": {
