@@ -6,9 +6,9 @@
     "runArgs": [
         "--privileged"
     ],
-    "containerEnv": {
-        "DISPLAY": "${localEnv:DISPLAY}"
-    },
+    "forwardPorts": [
+        "5900:5900"
+    ],
     "customizations": {
         "vscode": {
             "settings": {
