@@ -6,6 +6,9 @@
     "runArgs": [
         "--privileged"
     ],
+    "containerEnv": {
+        "DISPLAY": "${localEnv:DISPLAY}"
+    },
     "customizations": {
         "vscode": {
             "settings": {
