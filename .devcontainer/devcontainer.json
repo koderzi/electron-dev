@@ -1,6 +1,8 @@
 {
     "name": "electron-dev",
     "dockerFile": "docker/dockerFile",
+    "workspaceFolder": "/",
+    "shutdownAction": "stopContainer",
     "customizations": {
         "vscode": {
             "settings": {
