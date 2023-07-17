@@ -1,6 +1,6 @@
 {
     "name": "electron-dev",
-    "dockerFile": "docker/dockerFile",
+    "dockerFile": "docker/Dockerfile",
     "workspaceFolder": "/",
     "shutdownAction": "stopContainer",
     "runArgs": [
