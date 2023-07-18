@@ -7,4 +7,3 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
-    command: bash -c "apt-get update && apt-get install -y git"
