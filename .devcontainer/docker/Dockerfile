@@ -11,7 +11,7 @@ RUN apt-get -y install xvfb fluxbox x11vnc net-tools
 RUN apt-get -y install libglib2.0-dev libnss3 libatk1.0-0 libatk-bridge2.0-0 libcups2 libdrm2 libgtk-3-0 libgbm1 libasound2
 
 # Create command to run Electron App
-RUN mkdir /electron \
+RUN mkdir /electron
     # && echo -e '#!/bin/bash\n' > /electron/electron-dev \
     # && echo -e 'CSPATH=$PWD/node_modules/electron/dist/chrome-sandbox\n' >> /electron/electron-dev \
     # && echo -e 'if [[ ! -f "$CSPATH" ]]; then' >> /electron/electron-dev \
