@@ -1,8 +1,11 @@
 {
     "name": "electron-dev",
-    "dockerComposeFile": "docker/docker-compose.yaml",
-    "service": "electron",
-    "workspaceFolder": "/",
+    "build": {
+        "dockerFile": "docker/Dockerfile",
+        "args": {
+            "-t": "electron"
+        }
+    },
     "customizations": {
         "vscode": {
             "settings": {
