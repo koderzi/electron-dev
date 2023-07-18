@@ -4,5 +4,7 @@ services:
 
   electron:
     container_name: electron-dev
-    image: node:slim
+    build:
+      context: .
+      dockerfile: Dockerfile
     command: bash -c "apt-get update && apt-get install -y git"
