@@ -1,9 +1,6 @@
 {
     "name": "electron-dev",
-    "dockerComposeFile": "docker/docker-compose.yml",
-    "service": "electron",
-    "workspaceFolder": "/",
-    "shutdownAction": "stopCompose",
+    "dockerFile": "docker/Dockerfile",
     "customizations": {
         "vscode": {
             "settings": {
