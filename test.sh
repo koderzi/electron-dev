@@ -1,14 +1,22 @@
 #!/bin/bash
 
 # # Create a vnc display if it doesn't exist
-# if ! pgrep -f "x11vnc -create -env FD_PROG=/usr/bin/fluxbox -env X11VNC_FINDDISPLAY_ALWAYS_FAILS=1 -env X11VNC_CREATE_GEOM=1024x768x16 -gone killall Xvfb -bg -nopw" > /dev/null; then
-#     nohup x11vnc -create \
-#         -env FD_PROG=/usr/bin/fluxbox \
-#         -env X11VNC_FINDDISPLAY_ALWAYS_FAILS=1 \
-#         -env X11VNC_CREATE_GEOM=${1:-1024x768x16} \
-#         -gone 'killall Xvfb' \
-#         -bg -nopw >/dev/null 2>&1 &
-# fi
+# export DISPLAY=${DISPLAY:-:0}
+# xdpyinfo >/dev/null 2>&1 || (nohup Xvfb $DISPLAY -screen 0 1024x768x16 >/dev/null 2>&1 &)
+
+# nohup x11vnc -create \
+#     -env FD_PROG=/usr/bin/fluxbox \
+#     -gone 'killall Xvfb' \
+#     -bg -nopw >/dev/null 2>&1 &
+
+if ! pgrep -f "x11vnc -create -env FD_PROG=/usr/bin/fluxbox -env X11VNC_FINDDISPLAY_ALWAYS_FAILS=1 -env X11VNC_CREATE_GEOM=1024x768x16 -gone killall Xvfb -bg -nopw" > /dev/null; then
+    nohup x11vnc -create \
+        -env FD_PROG=/usr/bin/fluxbox \
+        -env X11VNC_FINDDISPLAY_ALWAYS_FAILS=1 \
+        -env X11VNC_CREATE_GEOM=${1:-1024x768x16} \
+        -gone 'killall Xvfb' \
+        -bg -nopw >/dev/null 2>&1 &
+fi
 
 # # # Kill any existing x11vnc processes
 # # if pgrep -f "x11vnc -create -env FD_PROG=/usr/bin/fluxbox -env X11VNC_FINDDISPLAY_ALWAYS_FAILS=1 -env X11VNC_CREATE_GEOM=1024x768x16 -gone killall Xvfb -bg -nopw" > /dev/null; then
