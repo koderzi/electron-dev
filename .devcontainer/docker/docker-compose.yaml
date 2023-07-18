@@ -1,0 +1,8 @@
+version: '3.8'
+
+services:
+
+  electron:
+    container_name: electron-dev
+    image: node:slim
+    command: bash -c "apt-get update && apt-get install -y git"

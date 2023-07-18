@@ -1,4 +1,4 @@
-FROM node:slim AS electron-dev
+FROM node:slim
 
 # Update apt-get and install git
 RUN apt-get update && \
