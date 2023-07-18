@@ -2,14 +2,24 @@ FROM node:slim
 
 # Install necessary packages
 RUN apt-get update && \
-    apt-get -y install git xvfb
+    apt-get -y install git
+
+# Install VNC dependencies
+RUN apt-get -y install xvfb
 
 # Install Electron dependencies
 RUN apt-get -y install libglib2.0-dev libnss3 libatk1.0-0 libatk-bridge2.0-0 libcups2 libdrm2 libgtk-3-0 libgbm1 libasound2
 
-# Set the display number and start Xvfb
-ENV DISPLAY=:1
-CMD Xvfb $DISPLAY -screen 0 1024x768x16 &
-
-# Expose the VNC port
-EXPOSE 5900
+# Create command to run Electron
+RUN mkdir /electron \
+    && echo -e '#!/bin/bash\n' > /electron/electron-run \
+    && echo -e 'CSPATH=$PWD/node_modules/electron/dist/chrome-sandbox\n' >> /electron/electron-run \
+    && echo -e 'if [[ ! -f "$CSPATH" ]]; then' >> /electron/electron-run \
+    && echo -e '\techo "Error: chrome-sandbox not found at $CSPATH.\nProcess aborted."' >> /electron/electron-run \
+    && echo -e '\texit 1' >> /electron/electron-run \
+    && echo -e 'fi\n' >> /electron/electron-run \
+    && echo -e 'if [[ $(stat -c %a "$CSPATH") != "4755" ]]; then' >> /electron/electron-run \
+    && echo -e '\tchmod 4755 "$CSPATH"' >> /electron/electron-run \
+    && echo -e 'fi\n' >> /electron/electron-run \
+    && echo -e 'su -c "xvfb-run npm start" node' >> /electron/electron-run \
+    && chmod +x /electron/electron-run

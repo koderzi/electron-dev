@@ -1,17 +1,9 @@
 {
     "name": "electron-dev",
-    "dockerFile": "docker/Dockerfile",
+    "dockerComposeFile": "docker/docker-compose.yml",
+    "service": "electron",
     "workspaceFolder": "/",
-    "shutdownAction": "stopContainer",
-    "runArgs": [
-        "--privileged"
-    ],
-    "containerEnv": {
-        "DISPLAY": ":1"
-    },
-    "forwardPorts": [
-        "5900:5900"
-    ],
+    "shutdownAction": "stopCompose",
     "customizations": {
         "vscode": {
             "settings": {
