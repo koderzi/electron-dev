@@ -1,3 +1,5 @@
+LABEL image.name="electron-dev"
+
 FROM node:slim
 
 # Update apt-get and install git
