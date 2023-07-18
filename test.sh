@@ -1,31 +1,32 @@
 #!/bin/bash
 
-# if total argument not equal to 1, echo "error"
-if $# != 1; then
-  echo "Error: wrong arguments"
-fi
-
-# Create a vnc display if it doesn't exist
-if ! pgrep -f "x11vnc -create -env FD_PROG=/usr/bin/fluxbox -env X11VNC_FINDDISPLAY_ALWAYS_FAILS=1 -env X11VNC_CREATE_GEOM=1024x768x16 -gone killall Xvfb -bg -nopw" > /dev/null; then
-    nohup x11vnc -create \
-        -env FD_PROG=/usr/bin/fluxbox \
-        -env X11VNC_FINDDISPLAY_ALWAYS_FAILS=1 \
-        -env X11VNC_CREATE_GEOM=${1:-1024x768x16} \
-        -gone 'killall Xvfb' \
-        -bg -nopw >/dev/null 2>&1 &
-fi
-
-# # Kill any existing x11vnc processes
-# if pgrep -f "x11vnc -create -env FD_PROG=/usr/bin/fluxbox -env X11VNC_FINDDISPLAY_ALWAYS_FAILS=1 -env X11VNC_CREATE_GEOM=1024x768x16 -gone killall Xvfb -bg -nopw" > /dev/null; then
-#     pkill -f "x11vnc -create -env FD_PROG=/usr/bin/fluxbox -env X11VNC_FINDDISPLAY_ALWAYS_FAILS=1 -env X11VNC_CREATE_GEOM=1024x768x16 -gone killall Xvfb -bg -nopw"
-# fi
-
-FINDDISPLAY=$(x11vnc --finddpy)
-if echo "$FINDDISPLAY" | grep -q "^DISPLAY=:"; then
-    value=${FINDDISPLAY#*=}
-    value=${value%%,*}
-    export DISPLAY=$value
-else
-    echo "Error: Virtual display not found"
+# if total argument not equal to 0 and $1 is not equal to 
+if [ $# -ne 1 ]; then
+    echo "error"
     exit 1
 fi
+
+# # Create a vnc display if it doesn't exist
+# if ! pgrep -f "x11vnc -create -env FD_PROG=/usr/bin/fluxbox -env X11VNC_FINDDISPLAY_ALWAYS_FAILS=1 -env X11VNC_CREATE_GEOM=1024x768x16 -gone killall Xvfb -bg -nopw" > /dev/null; then
+#     nohup x11vnc -create \
+#         -env FD_PROG=/usr/bin/fluxbox \
+#         -env X11VNC_FINDDISPLAY_ALWAYS_FAILS=1 \
+#         -env X11VNC_CREATE_GEOM=${1:-1024x768x16} \
+#         -gone 'killall Xvfb' \
+#         -bg -nopw >/dev/null 2>&1 &
+# fi
+
+# # # Kill any existing x11vnc processes
+# # if pgrep -f "x11vnc -create -env FD_PROG=/usr/bin/fluxbox -env X11VNC_FINDDISPLAY_ALWAYS_FAILS=1 -env X11VNC_CREATE_GEOM=1024x768x16 -gone killall Xvfb -bg -nopw" > /dev/null; then
+# #     pkill -f "x11vnc -create -env FD_PROG=/usr/bin/fluxbox -env X11VNC_FINDDISPLAY_ALWAYS_FAILS=1 -env X11VNC_CREATE_GEOM=1024x768x16 -gone killall Xvfb -bg -nopw"
+# # fi
+
+# FINDDISPLAY=$(x11vnc --finddpy)
+# if echo "$FINDDISPLAY" | grep -q "^DISPLAY=:"; then
+#     value=${FINDDISPLAY#*=}
+#     value=${value%%,*}
+#     export DISPLAY=$value
+# else
+#     echo "Error: Virtual display not found"
+#     exit 1
+# fi
