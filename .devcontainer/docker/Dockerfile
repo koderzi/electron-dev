@@ -1,6 +1,4 @@
-LABEL image.name="electron-dev"
-
-FROM node:slim
+FROM node:slim AS electron-dev
 
 # Update apt-get and install git
 RUN apt-get update && \
