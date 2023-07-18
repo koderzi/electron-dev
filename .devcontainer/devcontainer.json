@@ -1,7 +1,7 @@
 {
     "name": "electron-dev",
+    "dockerFile": "docker/Dockerfile",
     "build": {
-        "dockerFile": "docker/Dockerfile",
         "args": {
             "-t": "electron"
         }
