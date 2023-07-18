@@ -1,11 +1,5 @@
 #!/bin/bash
 
-# if total argument not equal to 0 and $1 is not equal to 
-if [ $# -ne 1 ]; then
-    echo "error"
-    exit 1
-fi
-
 # # Create a vnc display if it doesn't exist
 # if ! pgrep -f "x11vnc -create -env FD_PROG=/usr/bin/fluxbox -env X11VNC_FINDDISPLAY_ALWAYS_FAILS=1 -env X11VNC_CREATE_GEOM=1024x768x16 -gone killall Xvfb -bg -nopw" > /dev/null; then
 #     nohup x11vnc -create \
