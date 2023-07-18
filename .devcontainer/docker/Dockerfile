@@ -23,4 +23,5 @@ RUN mkdir /electron \
     && echo 'fi\n' >> /electron/electron-run \
     && echo 'su -c "xvfb-run npm start" node' >> /electron/electron-run \
     && chmod +x /electron/electron-run
-    && export PATH=$PATH:/electron
+
+ENV PATH="${PATH}:/electron"
