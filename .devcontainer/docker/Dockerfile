@@ -1,6 +1,6 @@
 FROM node:slim
 
-# Install necessary packages
+# Update apt-get and install git
 RUN apt-get update && \
     apt-get -y install git
 
@@ -25,3 +25,5 @@ RUN mkdir /electron \
     && chmod +x /electron/electron-run
 
 ENV PATH="${PATH}:/electron"
+
+EXPOSE 5900
