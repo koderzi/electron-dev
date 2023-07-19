@@ -11,5 +11,6 @@
                 "MichaelCurrin.auto-commit-msg"
             ]
         }
-    }
+    },
+    "postCreateCommand": "for d in /workspaces/*/ ; do if [ ! -d $d/.devcontainer ]; then continue; fi; if [ -d $d/.devcontainer ]; then dir=$(basename $d); break; fi; done && ln -s /workspaces/$dir/.devcontainer/cmd/electron-dev /usr/local/sbin/electron-dev"
 }
