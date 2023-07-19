@@ -85,7 +85,9 @@ function start-app() {
 	value=${value%%,*}
 	export DISPLAY=$value
 
-	npm start -- --no-sandbox
+	su -c "npm start" node
+
+	# npm start -- --no-sandbox
 }
 
 if [ "$#" -ne 1 ]; then
