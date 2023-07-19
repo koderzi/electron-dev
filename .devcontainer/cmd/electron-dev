@@ -15,31 +15,46 @@ function usage() {
 }
 
 function create-display() {
-	if ! pgrep -f "x11vnc -create -env FD_PROG=/usr/bin/fluxbox -env X11VNC_FINDDISPLAY_ALWAYS_FAILS=1 -env X11VNC_CREATE_GEOM=1024x768x16 -gone killall Xvfb -bg -nopw" > /dev/null; then
-		nohup x11vnc -create \
-			-env FD_PROG=/usr/bin/fluxbox \
-			-env X11VNC_FINDDISPLAY_ALWAYS_FAILS=1 \
-			-env X11VNC_CREATE_GEOM=${1:-1024x768x16} \
-			-gone 'killall Xvfb' \
-			-bg -nopw >/dev/null 2>&1 &
-	else
+	if pgrep -f "x11vnc -create -env FD_PROG=/usr/bin/fluxbox -env X11VNC_FINDDISPLAY_ALWAYS_FAILS=1 -env X11VNC_CREATE_GEOM=1024x768x16 -gone killall Xvfb -bg -nopw" > /dev/null; then
 		echo "VNC Virtual Display already exists."
 		exit 0
 	fi
-	if pgrep -f "x11vnc -create -env FD_PROG=/usr/bin/fluxbox -env X11VNC_FINDDISPLAY_ALWAYS_FAILS=1 -env X11VNC_CREATE_GEOM=1024x768x16 -gone killall Xvfb -bg -nopw" > /dev/null; then
-		echo "VNC Virtual Display created successfully."
-	else
-		echo "Unable to create VNC Virtual Display."
+
+	nohup x11vnc -create \
+		-env FD_PROG=/usr/bin/fluxbox \
+		-env X11VNC_FINDDISPLAY_ALWAYS_FAILS=1 \
+		-env X11VNC_CREATE_GEOM=${1:-1024x768x16} \
+		-gone 'killall Xvfb' \
+		-bg -nopw >/dev/null 2>&1 &
+
+	sleep 1
+
+	if ! pgrep -f "x11vnc -create -env FD_PROG=/usr/bin/fluxbox -env X11VNC_FINDDISPLAY_ALWAYS_FAILS=1 -env X11VNC_CREATE_GEOM=1024x768x16 -gone killall Xvfb -bg -nopw" > /dev/null; then
+		echo "Error: Unable to create VNC Virtual Display."
+		exit 1
 	fi
+
+	echo "VNC Virtual Display created successfully."
+	exit 0
 }
 
 function quit-display() {
+	if ! pgrep -f "x11vnc -create -env FD_PROG=/usr/bin/fluxbox -env X11VNC_FINDDISPLAY_ALWAYS_FAILS=1 -env X11VNC_CREATE_GEOM=1024x768x16 -gone killall Xvfb -bg -nopw" > /dev/null; then
+		echo "No VNC Virtual Display instance to quit."
+		exit 0
+	fi
+
 	pkill -f "x11vnc -create -env FD_PROG=/usr/bin/fluxbox -env X11VNC_FINDDISPLAY_ALWAYS_FAILS=1 -env X11VNC_CREATE_GEOM=1024x768x16 -gone killall Xvfb -bg -nopw"
+
+	sleep 1
+
 	if pgrep -f "x11vnc -create -env FD_PROG=/usr/bin/fluxbox -env X11VNC_FINDDISPLAY_ALWAYS_FAILS=1 -env X11VNC_CREATE_GEOM=1024x768x16 -gone killall Xvfb -bg -nopw" > /dev/null; then
 		echo "Unable to quit VNC Virtual Display."
 		exit 1
 	fi
+
 	echo "Successfully quit VNC Virtual Display."
+	exit 0
 }
 
 function start-app() {
@@ -53,16 +68,23 @@ function start-app() {
 	if [[ $(stat -c %a "$CSPATH") != "4755" ]]; then
 		chmod 4755 "$CSPATH"
 	fi
-
-	FINDDISPLAY=$(x11vnc --finddpy)
-	if echo "$FINDDISPLAY" | grep -q "^DISPLAY=:"; then
-		value=${FINDDISPLAY#*=}
-		value=${value%%,*}
-		export DISPLAY=$value
-	else
-		echo "Error: VNC Virtual display not found. Process aborted."
+	
+	if ! pgrep -f "x11vnc -create -env FD_PROG=/usr/bin/fluxbox -env X11VNC_FINDDISPLAY_ALWAYS_FAILS=1 -env X11VNC_CREATE_GEOM=1024x768x16 -gone killall Xvfb -bg -nopw" > /dev/null; then
+		echo "Error: VNC Virtual display not found."
 		exit 1
 	fi
+		
+	FINDDISPLAY=$(x11vnc --finddpy)
+
+	if ! echo "$FINDDISPLAY" | grep -q "^DISPLAY=:"; then
+		echo "Error: VNC Virtual is not connected."
+		exit 1
+	fi
+
+	value=${FINDDISPLAY#*=}
+	value=${value%%,*}
+	export DISPLAY=$value
+
 	npm start -- --no-sandbox
 }
 
