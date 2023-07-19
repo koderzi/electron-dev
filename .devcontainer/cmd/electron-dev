@@ -1,0 +1,93 @@
+#!/bin/bash
+
+function usage() {
+	echo "Usage: electron-dev [COMMAND]"
+	echo ""
+	echo "Command:"
+	echo "  -h, --help"
+	echo "    Show this help message."
+	echo "  -c, --create-display"
+	echo "    Create a VNC Virtual Display."
+	echo "  -q, --quit-display"
+	echo "    Quit the VNC Virtual Display."
+	echo "  -s, --start-app"
+	echo "    Start the electron app."
+}
+
+function create-display() {
+	if ! pgrep -f "x11vnc -create -env FD_PROG=/usr/bin/fluxbox -env X11VNC_FINDDISPLAY_ALWAYS_FAILS=1 -env X11VNC_CREATE_GEOM=1024x768x16 -gone killall Xvfb -bg -nopw" > /dev/null; then
+		nohup x11vnc -create \
+			-env FD_PROG=/usr/bin/fluxbox \
+			-env X11VNC_FINDDISPLAY_ALWAYS_FAILS=1 \
+			-env X11VNC_CREATE_GEOM=${1:-1024x768x16} \
+			-gone 'killall Xvfb' \
+			-bg -nopw >/dev/null 2>&1 &
+	else
+		echo "VNC Virtual Display already exists."
+		exit 0
+	fi
+	if pgrep -f "x11vnc -create -env FD_PROG=/usr/bin/fluxbox -env X11VNC_FINDDISPLAY_ALWAYS_FAILS=1 -env X11VNC_CREATE_GEOM=1024x768x16 -gone killall Xvfb -bg -nopw" > /dev/null; then
+		echo "VNC Virtual Display created successfully."
+	fi
+}
+
+function quit-display() {
+	pkill -f "x11vnc -create -env FD_PROG=/usr/bin/fluxbox -env X11VNC_FINDDISPLAY_ALWAYS_FAILS=1 -env X11VNC_CREATE_GEOM=1024x768x16 -gone killall Xvfb -bg -nopw"
+	if pgrep -f "x11vnc -create -env FD_PROG=/usr/bin/fluxbox -env X11VNC_FINDDISPLAY_ALWAYS_FAILS=1 -env X11VNC_CREATE_GEOM=1024x768x16 -gone killall Xvfb -bg -nopw" > /dev/null; then
+		echo "Unable to quit VNC Virtual Display."
+		exit 1
+	fi
+	echo "Successfully quit VNC Virtual Display."
+}
+
+function start-app() {
+	CSPATH=$PWD/node_modules/electron/dist/chrome-sandbox
+
+	if [[ ! -f "$CSPATH" ]]; then
+		echo "Error: chrome-sandbox not found at $CSPATH. Process aborted."
+		exit 1
+	fi
+
+	if [[ $(stat -c %a "$CSPATH") != "4755" ]]; then
+		chmod 4755 "$CSPATH"
+	fi
+
+	FINDDISPLAY=$(x11vnc --finddpy)
+	if echo "$FINDDISPLAY" | grep -q "^DISPLAY=:"; then
+		value=${FINDDISPLAY#*=}
+		value=${value%%,*}
+		export DISPLAY=$value
+	else
+		echo "Error: VNC Virtual display not found. Process aborted."
+		exit 1
+	fi
+	npm start -- --no-sandbox
+}
+
+if [ "$#" -ne 1 ]; then
+	usage
+	exit 1
+fi
+
+case "$1" in
+	"-h" | "--help")
+		usage
+		exit 0
+		;;
+	"-c" | "--create-display")
+		create-display
+		exit 0
+		;;
+	"-q" | "--quit-display")
+		quit-display
+		exit 0
+		;;
+	"-s" | "--start-app")
+		start-app
+		exit 0
+		;;
+	*)
+		usage
+		exit 1
+		;;
+esac
