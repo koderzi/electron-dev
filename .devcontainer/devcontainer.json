@@ -1,9 +1,7 @@
 {
     "name": "electron-dev",
     "dockerFile": "docker/Dockerfile",
-    "runArgs": [
-        "--privileged"
-    ],
+    "remoteUser": "node",
     "customizations": {
         "vscode": {
             "settings": {
