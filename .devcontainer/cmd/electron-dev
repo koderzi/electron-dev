@@ -15,17 +15,24 @@ function usage() {
 }
 
 function create-display() {
-	if pgrep -f "x11vnc -create -env FD_PROG=/usr/bin/fluxbox -env X11VNC_FINDDISPLAY_ALWAYS_FAILS=1 -env X11VNC_CREATE_GEOM=1024x768x16 -gone killall Xvfb -bg -nopw" > /dev/null; then
+	if pgrep -a x11vnc &>/dev/null; then
 		echo "VNC Virtual Display already exists."
 		exit 0
 	fi
 
-	nohup x11vnc -create \
-		-env FD_PROG=/usr/bin/fluxbox \
-		-env X11VNC_FINDDISPLAY_ALWAYS_FAILS=1 \
-		-env X11VNC_CREATE_GEOM=${1:-1024x768x16} \
-		-gone 'killall Xvfb' \
-		-bg -nopw >/dev/null 2>&1 &
+	# nohup x11vnc -create \
+    #     -env FD_PROG=/usr/bin/fluxbox \
+    #     -env X11VNC_FINDDISPLAY_ALWAYS_FAILS=1 \
+    #     -env X11VNC_CREATE_GEOM=${1:-1024x768x16} \
+    #     -gone "killall Xvfb" \
+    #     -bg -nopw -noipv6 -localhost -forever >/dev/null 2>&1 &
+
+	nohup su -s /bin/bash node -c 'x11vnc -create \
+        -env FD_PROG=/usr/bin/fluxbox \
+        -env X11VNC_FINDDISPLAY_ALWAYS_FAILS=1 \
+        -env X11VNC_CREATE_GEOM=${1:-1024x768x16} \
+        -gone "killall Xvfb" \
+        -bg -nopw -noipv6 -localhost -forever' >/dev/null 2>&1 &
 
 	sleep 1
 
@@ -39,12 +46,14 @@ function create-display() {
 }
 
 function quit-display() {
-	if ! pgrep -f "x11vnc -create -env FD_PROG=/usr/bin/fluxbox -env X11VNC_FINDDISPLAY_ALWAYS_FAILS=1 -env X11VNC_CREATE_GEOM=1024x768x16 -gone killall Xvfb -bg -nopw" > /dev/null; then
+	if ! pgrep -a x11vnc &>/dev/null || ! pgrep -a Xvfb &>/dev/null || ! pgrep -a fluxbox &>/dev/null; then
 		echo "No VNC Virtual Display instance to quit."
 		exit 0
 	fi
 
-	pkill -f "x11vnc -create -env FD_PROG=/usr/bin/fluxbox -env X11VNC_FINDDISPLAY_ALWAYS_FAILS=1 -env X11VNC_CREATE_GEOM=1024x768x16 -gone killall Xvfb -bg -nopw"
+	pkill -f "x11vnc"
+	pkill -f "Xvfb"
+	pkill -f "fluxbox"
 
 	sleep 1
 
@@ -65,6 +74,9 @@ function start-app() {
 		exit 1
 	fi
 
+	chown -R node:node $PWD
+	chown root:root $CSPATH
+
 	if [[ $(stat -c %a "$CSPATH") != "4755" ]]; then
 		chmod 4755 "$CSPATH"
 	fi
@@ -73,8 +85,10 @@ function start-app() {
 		echo "Error: VNC Virtual display not found."
 		exit 1
 	fi
-		
-	FINDDISPLAY=$(x11vnc --finddpy)
+	
+	FINDDISPLAY=$(su -c "x11vnc --finddpy" -s /bin/sh node)
+
+	# FINDDISPLAY=$(x11vnc --finddpy)
 
 	if ! echo "$FINDDISPLAY" | grep -q "^DISPLAY=:"; then
 		echo "Error: VNC Virtual is not connected."
@@ -83,9 +97,12 @@ function start-app() {
 
 	value=${FINDDISPLAY#*=}
 	value=${value%%,*}
-	export DISPLAY=$value
 
-	npm start
+	# export DISPLAY=$value
+
+	su -s /bin/bash node -c "export DISPLAY=$value; npm start"
+
+	# npm start
 }
 
 if [ "$#" -ne 1 ]; then
