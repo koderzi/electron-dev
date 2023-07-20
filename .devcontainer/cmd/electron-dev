@@ -99,7 +99,7 @@ function start-app() {
 
 	su -s /bin/bash node -c "export DISPLAY=$value; npm start"
 
-	# npm start
+	# npm start --no-sandbox
 }
 
 if [ "$#" -ne 1 ]; then
