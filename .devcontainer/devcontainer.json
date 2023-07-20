@@ -6,6 +6,7 @@
         "-p",
         "5900"
     ],
+    "shutdownAction": "stopContainer",
     "customizations": {
         "vscode": {
             "settings": {
