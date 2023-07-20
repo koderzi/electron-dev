@@ -15,7 +15,7 @@ function usage() {
 }
 
 function create-display() {
-	if pgrep -a x11vnc &>/dev/null; then
+	if pgrep -a x11vnc > /dev/null; then
 		echo "VNC Virtual Display already exists."
 		exit 0
 	fi
@@ -36,7 +36,7 @@ function create-display() {
 
 	sleep 1
 
-	if ! pgrep -f "x11vnc -create -env FD_PROG=/usr/bin/fluxbox -env X11VNC_FINDDISPLAY_ALWAYS_FAILS=1 -env X11VNC_CREATE_GEOM=1024x768x16 -gone killall Xvfb -bg -nopw" > /dev/null; then
+	if ! pgrep -a x11vnc >/dev/null; then
 		echo "Error: Unable to create VNC Virtual Display."
 		exit 1
 	fi
@@ -46,7 +46,7 @@ function create-display() {
 }
 
 function quit-display() {
-	if ! pgrep -a x11vnc &>/dev/null || ! pgrep -a Xvfb &>/dev/null || ! pgrep -a fluxbox &>/dev/null; then
+	if ! pgrep -a x11vnc > /dev/null || ! pgrep -a Xvfb > /dev/null || ! pgrep -a fluxbox > /dev/null; then
 		echo "No VNC Virtual Display instance to quit."
 		exit 0
 	fi
@@ -57,7 +57,7 @@ function quit-display() {
 
 	sleep 1
 
-	if pgrep -f "x11vnc -create -env FD_PROG=/usr/bin/fluxbox -env X11VNC_FINDDISPLAY_ALWAYS_FAILS=1 -env X11VNC_CREATE_GEOM=1024x768x16 -gone killall Xvfb -bg -nopw" > /dev/null; then
+	if pgrep -a x11vnc >/dev/null; then
 		echo "Unable to quit VNC Virtual Display."
 		exit 1
 	fi
@@ -74,19 +74,16 @@ function start-app() {
 		exit 1
 	fi
 
-	chown -R node:node $PWD
-	chown root:root $CSPATH
-
-	if [[ $(stat -c %a "$CSPATH") != "4755" ]]; then
-		chmod 4755 "$CSPATH"
-	fi
+	chown -R node "$PWD"
+	chown root "$CSPATH"
+	chmod 4755 "$CSPATH"
 	
-	if ! pgrep -f "x11vnc -create -env FD_PROG=/usr/bin/fluxbox -env X11VNC_FINDDISPLAY_ALWAYS_FAILS=1 -env X11VNC_CREATE_GEOM=1024x768x16 -gone killall Xvfb -bg -nopw" > /dev/null; then
+	if ! pgrep -a x11vnc >/dev/null; then
 		echo "Error: VNC Virtual display not found."
 		exit 1
 	fi
 	
-	FINDDISPLAY=$(su -c "x11vnc --finddpy" -s /bin/sh node)
+	FINDDISPLAY=$(su -c "x11vnc --finddpy" -s /bin/sh node) 
 
 	# FINDDISPLAY=$(x11vnc --finddpy)
 
