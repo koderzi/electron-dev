@@ -74,8 +74,8 @@ function start-app() {
 		exit 1
 	fi
 
-	chown -R node "$PWD"
-	chown root "$CSPATH"
+	chown -R electron:electron "$PWD"
+	chown root:root "$CSPATH"
 	chmod 4755 "$CSPATH"
 	
 	if ! pgrep -a x11vnc >/dev/null; then

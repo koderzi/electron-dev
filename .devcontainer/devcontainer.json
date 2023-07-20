@@ -2,6 +2,7 @@
     "name": "electron-dev",
     "dockerFile": "docker/Dockerfile",
     "runArgs": [
+        "--privileged",
         "-p",
         "5900"
     ],
