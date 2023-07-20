@@ -74,7 +74,7 @@ function start-app() {
 		exit 1
 	fi
 
-	chown -R electron:electron "$PWD"
+	chown -R node:node "$PWD"
 	chown root:root "$CSPATH"
 	chmod 4755 "$CSPATH"
 	
@@ -82,8 +82,8 @@ function start-app() {
 		echo "Error: VNC Virtual display not found."
 		exit 1
 	fi
-	
-	FINDDISPLAY=$(su -c "x11vnc --finddpy" -s /bin/sh node) 
+
+	FINDDISPLAY=$(su -c "x11vnc --finddpy" -s /bin/sh node)
 
 	# FINDDISPLAY=$(x11vnc --finddpy)
 
