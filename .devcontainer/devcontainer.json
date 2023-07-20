@@ -16,5 +16,5 @@
             ]
         }
     },
-    "postCreateCommand": "for d in /workspaces/*/ ; do if [ ! -d $d/.devcontainer ]; then continue; fi; if [ -d $d/.devcontainer ]; then dir=$(basename $d); break; fi; done && ln -s /workspaces/$dir/.devcontainer/cmd/electron-dev /usr/local/sbin/electron-dev"
-}
+    "postCreateCommand": "for d in /workspaces/*/ ; do if [ ! -d $d/.devcontainer ]; then continue; fi; if [ -d $d/.devcontainer ]; then dir=$(basename $d); break; fi; done && ln -s /workspaces/$dir/.devcontainer/cmd/electron-dev /usr/local/sbin/electron-dev; echo 'kernel.unprivileged_userns_clone=1' > /etc/sysctl.d/00-local-userns.conf"
+} 
