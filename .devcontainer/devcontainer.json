@@ -1,8 +1,9 @@
 {
     "name": "electron-dev",
     "dockerFile": "docker/Dockerfile",
-    "forwardPorts": [
-        "5900:5900"
+    "runArgs": [
+        "-p",
+        "5900"
     ],
     "customizations": {
         "vscode": {
