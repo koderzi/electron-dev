@@ -2,9 +2,7 @@
     "name": "electron-dev",
     "dockerFile": "docker/Dockerfile",
     "runArgs": [
-        "--privileged",
-        "-p",
-        "5900"
+        "--privileged"
     ],
     "shutdownAction": "stopContainer",
     "customizations": {
