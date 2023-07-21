@@ -20,13 +20,6 @@ function create-display() {
 		exit 0
 	fi
 
-	# nohup x11vnc -create \
-    #     -env FD_PROG=/usr/bin/fluxbox \
-    #     -env X11VNC_FINDDISPLAY_ALWAYS_FAILS=1 \
-    #     -env X11VNC_CREATE_GEOM=${1:-1024x768x16} \
-    #     -gone "killall Xvfb" \
-    #     -bg -nopw -noipv6 -localhost -forever >/dev/null 2>&1 &
-
 	nohup su -s /bin/bash node -c 'x11vnc -create \
         -env FD_PROG=/usr/bin/fluxbox \
         -env X11VNC_FINDDISPLAY_ALWAYS_FAILS=1 \
@@ -36,24 +29,24 @@ function create-display() {
 
 	sleep 1
 
-	if ! pgrep -a x11vnc >/dev/null; then
+	if pgrep -a x11vnc >/dev/null; then
+		echo "VNC Virtual Display created successfully."
+		exit 0
+	else
 		echo "Error: Unable to create VNC Virtual Display."
 		exit 1
 	fi
-
-	echo "VNC Virtual Display created successfully."
-	exit 0
 }
 
 function quit-display() {
-	if ! pgrep -a x11vnc > /dev/null || ! pgrep -a Xvfb > /dev/null || ! pgrep -a fluxbox > /dev/null; then
+	if pgrep -a x11vnc > /dev/null || pgrep -a Xvfb > /dev/null || pgrep -a fluxbox > /dev/null; then
+		pkill -f "x11vnc"
+		pkill -f "Xvfb"
+		pkill -f "fluxbox"
+	else
 		echo "No VNC Virtual Display instance to quit."
 		exit 0
 	fi
-
-	pkill -f "x11vnc"
-	pkill -f "Xvfb"
-	pkill -f "fluxbox"
 
 	sleep 1
 
@@ -85,8 +78,6 @@ function start-app() {
 
 	FINDDISPLAY=$(su -c "x11vnc --finddpy" -s /bin/sh node)
 
-	# FINDDISPLAY=$(x11vnc --finddpy)
-
 	if ! echo "$FINDDISPLAY" | grep -q "^DISPLAY=:"; then
 		echo "Error: VNC Virtual is not connected."
 		exit 1
@@ -95,11 +86,7 @@ function start-app() {
 	value=${FINDDISPLAY#*=}
 	value=${value%%,*}
 
-	# export DISPLAY=$value
-
 	su -s /bin/bash node -c "export DISPLAY=$value; npm start"
-
-	# npm start --no-sandbox
 }
 
 if [ "$#" -ne 1 ]; then
