@@ -11,7 +11,8 @@
     "customizations": {
         "vscode": {
             "settings": {
-                "git.ignoreMissingGitWarning": true
+                "git.ignoreMissingGitWarning": true,
+                "remote.autoForwardPorts": true
             },
             "extensions": [
                 "eamodio.gitlens",
