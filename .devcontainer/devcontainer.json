@@ -4,15 +4,11 @@
     "runArgs": [
         "--cap-add=SYS_ADMIN"
     ],
-    "appPort": [
-        5900
-    ],
     "shutdownAction": "stopContainer",
     "customizations": {
         "vscode": {
             "settings": {
-                "git.ignoreMissingGitWarning": true,
-                "remote.autoForwardPorts": true
+                "git.ignoreMissingGitWarning": true
             },
             "extensions": [
                 "eamodio.gitlens",
