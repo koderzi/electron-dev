@@ -20,19 +20,12 @@ function create-display() {
 		exit 0
 	fi
 
-	x11vnc -create \
+	nohup su -s /bin/bash node -c 'x11vnc -create \
         -env FD_PROG=/usr/bin/fluxbox \
         -env X11VNC_FINDDISPLAY_ALWAYS_FAILS=1 \
         -env X11VNC_CREATE_GEOM=${1:-1024x768x16} \
         -gone "killall Xvfb" \
-        -bg -nopw -noipv6 -localhost -forever >/dev/null 2>&1 &
-
-	# nohup su -s /bin/bash node -c 'x11vnc -create \
-    #     -env FD_PROG=/usr/bin/fluxbox \
-    #     -env X11VNC_FINDDISPLAY_ALWAYS_FAILS=1 \
-    #     -env X11VNC_CREATE_GEOM=${1:-1024x768x16} \
-    #     -gone "killall Xvfb" \
-    #     -bg -nopw -noipv6 -localhost -forever' >/dev/null 2>&1 &
+        -bg -nopw -noipv6 -localhost -forever' >/dev/null 2>&1 &
 
 	sleep 1
 

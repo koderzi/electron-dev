@@ -4,6 +4,9 @@
     "runArgs": [
         "--cap-add=SYS_ADMIN"
     ],
+    "forwardPorts": [
+        5900
+    ],
     "shutdownAction": "stopContainer",
     "customizations": {
         "vscode": {
