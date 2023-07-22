@@ -5,7 +5,7 @@
         "--cap-add=SYS_ADMIN"
     ],
     "appPort": [
-        3000
+        5900
     ],
     "shutdownAction": "stopContainer",
     "customizations": {
