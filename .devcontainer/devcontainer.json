@@ -14,7 +14,6 @@
                 "git.ignoreMissingGitWarning": true
             },
             "extensions": [
-                "eamodio.gitlens",
                 "MichaelCurrin.auto-commit-msg"
             ]
         }
