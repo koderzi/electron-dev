@@ -1,20 +1,31 @@
 #!/bin/bash
 
+echo -e "\n"
+
 # Check if git username is configured
 if [[ -z $(git config --global user.name) ]]; then
     read -p "Enter Git username: " username
-    git config --global user.name "$username"
-    echo "Git username '$username' has been set."
+    if [[ -n "$username" ]]; then
+        git config --global user.name "$username"
+        echo -e "Git username '$username' has been set.\n"
+    else
+        echo -e "Git username was not provided.\n"
+    fi
 fi
 
 # Check if git email is configured
 if [[ -z $(git config --global user.email) ]]; then
     read -p "Enter Git email: " email
-    git config --global user.email "$email"
-    echo "Git email '$email' has been set."
+    if [[ -n "$email" ]]; then
+        git config --global user.email "$email"
+        echo "Git email '$email' has been set.\n"
+    else
+        echo -e "Git email was not provided.\n"
+    fi
 fi
 
 
 if [[ -n $(git config --global user.name) && -n $(git config --global user.email) ]]; then
+    echo "\n";
     echo -e "Configured git.\n"
 fi
