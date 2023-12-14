@@ -8,10 +8,10 @@ function usage() {
 	echo "    Show this help message."
 	echo "  -c, --create-display"
 	echo "    Create a VNC Virtual Display."
-	echo "  -q, --quit-display"
-	echo "    Quit the VNC Virtual Display."
 	echo "  -s, --start-app"
 	echo "    Start the electron app."
+	echo "  -q, --quit-display"
+	echo "    Quit the VNC Virtual Display."
 }
 
 function create-display() {

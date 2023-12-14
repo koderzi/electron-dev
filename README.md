@@ -23,5 +23,11 @@ Available commands:
 
 - `-h, --help`: Show the help message.
 - `-c, --create-display`: Create a VNC virtual display.
-- `-q, --quit-display`: Quit the VNC virtual display.
 - `-s, --start-app`: Start the Electron app.
+- `-q, --quit-display`: Quit the VNC virtual display.
+
+How to use:
+
+1. Create a VNC virtual display by using code `electron-dev -c` in vscode terminal.
+2. Start TigerVNC connect to `localhost:5900`. Please make sure that authentication option `none` have been enabled.
+3. Once connected, you can start your electron app using code `electron-dev -s`. Please make sure that you are in the app directory before start.
