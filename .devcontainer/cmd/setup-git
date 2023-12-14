@@ -26,6 +26,6 @@ fi
 
 
 if [[ -n $(git config --global user.name) && -n $(git config --global user.email) ]]; then
-    echo -e"\n";
+    echo -e "\n"
     echo -e "Configured git.\n"
 fi
