@@ -1,6 +1,6 @@
 # electron-dev - Dockerized Electron Development Environment
 
-This repository provides a development environment for Electron using VSCode and Dev Container. It allows you to easily set up a local Electron environment for development purposes. It comes pre-installed with a bash script called `electron-dev`, which helps you manage various tasks such as creating a VNC virtual display, quitting the VNC virtual display, and starting the Electron app.
+This repository provides a development environment for Electron using VSCode and Dev Container. It allows you to easily set up a local Electron environment for development purposes. It comes pre-installed with a bash script called `electron-dev`, which helps you manage various tasks such as creating a VNC virtual display, starting the Electron app and quitting the VNC virtual display.
 
 ## Prerequisites
 
@@ -28,6 +28,6 @@ Available commands:
 
 How to use:
 
-1. Create a VNC virtual display by using code `electron-dev -c` in vscode terminal.
-2. Start TigerVNC connect to `localhost:5900`. Please make sure that authentication option `none` have been enabled.
-3. Once connected, you can start your electron app using code `electron-dev -s`. Please make sure that you are in the app directory before start.
+1. Create a VNC virtual display by using command "electron-dev -c" in the VSCode terminal.
+2. Start TigerVNC and connect to "localhost:5900". Make sure that authentication option "none" is enabled.
+3. Once connected, you can start your Electron app using command "electron-dev -s". Make sure that you are in the app directory before starting.
