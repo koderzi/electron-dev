@@ -28,6 +28,6 @@ Available commands:
 
 ### How to use:
 
->1. Create a VNC virtual display by using command ***`electron-dev -c`*** in the VSCode terminal.
->2. Start TigerVNC and connect to ***`localhost:5900`***. Make sure that authentication is ***disabled***.
->3. Once connected, you can start your Electron app using command ***`electron-dev -s`***. Make sure that you are in the app directory before starting.
+1. Create a VNC virtual display by using command ***`electron-dev -c`*** in the VSCode terminal.
+1. Start TigerVNC and connect to ***`localhost:5900`***. Make sure that authentication is ***disabled***.
+1. Once connected, you can start your Electron app using command ***`electron-dev -s`***. Make sure that you are in the app directory before starting.
