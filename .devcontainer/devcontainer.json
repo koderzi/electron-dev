@@ -1,21 +1,29 @@
 {
     "name": "electron-dev",
     "dockerFile": "docker/Dockerfile",
-    "runArgs": [
-        "--cap-add=SYS_ADMIN"
-    ],
+    "remoteUser": "node",
     "forwardPorts": [
-        5900
+        "0:6080"
     ],
-    "shutdownAction": "stopContainer",
+    "portsAttributes": {
+        "0:6080": {
+            "label": "Desktop GUI",
+            "onAutoForward": "openBrowser"
+        }
+    },
+    "features": {
+        "ghcr.io/devcontainers/features/desktop-lite:1": {}
+    },
     "customizations": {
         "vscode": {
             "settings": {
                 "git.ignoreMissingGitWarning": true
             },
-            "extensions": []
+            "extensions": [
+                "dbaeumer.vscode-eslint"
+            ]
         }
     },
-    "postCreateCommand": "${containerWorkspaceFolder}/.devcontainer/cmd/electron-dev /usr/local/sbin/electron-dev",
+    "shutdownAction": "stopContainer",
     "postAttachCommand": "${containerWorkspaceFolder}/.devcontainer/cmd/setup-git"
 }

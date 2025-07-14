@@ -1,33 +1,55 @@
-# electron-dev - Dockerized Electron Development Environment
+# Dockerized Electron Development Environment
 
-This repository provides a development environment for Electron using VSCode and Dev Container. It allows you to easily set up a local Electron environment for development purposes. It comes pre-installed with a bash script called `electron-dev`, which helps you manage various tasks such as creating a VNC virtual display, starting the Electron app and quitting the VNC virtual display.
+This repository provides a self-contained development environment for Electron using VS Code and Dev Containers.
+
+It creates an isolated Docker container with all the necessary dependencies and provides a virtual desktop accessible through your web browser. The environment defaults to a non-root user for enhanced security, making it a safe and clean way to build and test your application.
+
+## Key Features
+
+* **Isolated Environment**: All dependencies for your Electron app are managed within the container, keeping your host machine clean.
+* **Browser-Based GUI**: No need to install a separate VNC client. The container's desktop is streamed directly to a browser tab.
+* **No Port Collisions**: The environment uses dynamic port mapping, allowing you to run multiple instances without conflicts.
+* **Rootless by Default**: Terminals and commands run as a non-root `node` user for better security.
 
 ## Prerequisites
 
-Before using this repository, make sure you have the following installed on your system:
+Before you begin, make sure you have the following installed on your system:
 
-- Docker Desktop
-- VSCode with Dev Container extension installed
-- Alternative: Remote Repositories extension for VSCode
-- VNC viewer installed (e.g., TigerVNC)
+* **Docker Desktop**
+* **Visual Studio Code** with the **Dev Containers** extension
 
-## Usage
+## How to Use
 
-To use the `electron-dev` script, run the following command:
+1.  **Open in Container**: Open this project folder in VS Code. A notification will appear in the bottom-right corner; click **"Reopen in Container"**.
 
-```
-electron-dev [COMMAND]
-```
+2.  **Wait for Build**: The first time you open it, the Dev Container will build. This may take a few minutes.
 
-Available commands:
+3.  **Access the Desktop**: Once the build is complete, VS Code will automatically forward a port and open a new tab in your web browser displaying the container's Linux desktop.
 
-- `-h, --help`: Show the help message.
-- `-c, --create-display`: Create a VNC virtual display.
-- `-s, --start-app`: Start the Electron app.
-- `-q, --quit-display`: Quit the VNC virtual display.
+4.  **Configure `package.json`**: Make sure your `start` script in your `package.json` file includes the **`--no-sandbox`** flag. This is required for Electron to start in this environment.
 
-### How to use:
+    ```json
+    "scripts": {
+      "start": "electron . --no-sandbox"
+    }
+    ```
 
-1. Create a VNC virtual display by using command ***`electron-dev -c`*** in the VSCode terminal.
-1. Start TigerVNC and connect to ***`localhost:5900`***. (Make sure to connect without authentication)
-1. Once connected, you can start your Electron app using command ***`electron-dev -s`***. (Make sure that you are in the app directory before starting)
+5.  **Start Your App**:
+    * Open a new terminal in VS Code (**Terminal** > **New Terminal**). The prompt will show you are the `node` user.
+    * In that terminal, simply run the start command:
+        ```bash
+        npm start
+        ```
+
+Your Electron app's window will appear inside the browser tab that's showing the virtual desktop.
+
+***
+
+## Installing Additional Software
+
+Because the terminal runs as the non-root `node` user, you must use `sudo` to perform administrative tasks, such as installing new packages.
+
+**Example:**
+
+```bash
+sudo apt-get update && sudo apt-get install -y <package-name>
