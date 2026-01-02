@@ -99,6 +99,8 @@ Now let's create a simple Electron application inside the container:
 
 4. **Create the main Electron file** (`main.js`):
 
+   You can create this file using your preferred text editor in VS Code, or use the command line:
+
    ```bash
    cat > main.js << 'EOF'
    const { app, BrowserWindow } = require('electron')
@@ -108,8 +110,8 @@ Now let's create a simple Electron application inside the container:
        width: 800,
        height: 600,
        webPreferences: {
-         nodeIntegration: true,
-         contextIsolation: false
+         nodeIntegration: false,
+         contextIsolation: true
        }
      })
    
@@ -134,7 +136,11 @@ Now let's create a simple Electron application inside the container:
    EOF
    ```
 
+   **Note:** This example uses secure defaults (`nodeIntegration: false`, `contextIsolation: true`) to protect against security vulnerabilities. If you need Node.js functionality in your renderer, use IPC communication via `preload` scripts.
+
 5. **Create an HTML file** (`index.html`):
+
+   You can create this file using your preferred text editor in VS Code, or use the command line:
 
    ```bash
    cat > index.html << 'EOF'
@@ -167,9 +173,13 @@ Now let's create a simple Electron application inside the container:
        <div class="container">
          <h1>🚀 Hello Electron!</h1>
          <p>You are running Electron in a Docker container!</p>
-         <p>Node.js: <script>document.write(process.versions.node)</script></p>
-         <p>Electron: <script>document.write(process.versions.electron)</script></p>
+         <p id="versions"></p>
        </div>
+       <script>
+         // Display version information safely without Node integration
+         document.getElementById('versions').innerHTML = 
+           'Chrome: ' + navigator.userAgent.match(/Chrome\/(\S+)/)[1];
+       </script>
    </body>
    </html>
    EOF
@@ -191,7 +201,7 @@ Edit your `package.json` and add/modify the `main` and `scripts` sections:
     "start": "electron . --no-sandbox"
   },
   "devDependencies": {
-    "electron": "^latest"
+    "electron": "^33.0.0"
   }
 }
 ```
