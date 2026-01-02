@@ -177,8 +177,9 @@ Now let's create a simple Electron application inside the container:
        </div>
        <script>
          // Display version information safely without Node integration
+         const chromeMatch = navigator.userAgent.match(/Chrome\/(\S+)/);
          document.getElementById('versions').innerHTML = 
-           'Chrome: ' + navigator.userAgent.match(/Chrome\/(\S+)/)[1];
+           chromeMatch ? 'Chrome: ' + chromeMatch[1] : 'Browser version not detected';
        </script>
    </body>
    </html>
