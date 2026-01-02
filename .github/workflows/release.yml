@@ -1,0 +1,60 @@
+name: Build & Release
+
+on:
+  push:
+    tags:
+      - '[0-9]+.[0-9]+.[0-9]+'
+
+jobs:
+  build:
+    runs-on: ${{ matrix.os }}
+
+    strategy:
+      matrix:
+        # Define the operating systems to run the job on
+        # [
+        #   ubuntu-latest,
+        #   macos-latest,
+        #   windows-latest
+        # ]
+        os: [ macos-latest, windows-latest ]
+
+    steps:
+    - name: Check out git repository
+      uses: actions/checkout@v3
+
+    - name: Install Node.js
+      uses: actions/setup-node@v3
+      with:
+        node-version: 18
+
+    - name: Install Dependencies
+      run: npm install
+      
+    - name: Update Version From Tag
+      shell: bash
+      run: |
+        # Get the version from the package.json file
+        PACKAGE_VERSION=$(node -p "require('./package.json').version")
+
+        # Check if the package version is different from the tag
+        if [ "$PACKAGE_VERSION" != "${{ github.ref_name }}" ]; then
+          echo "Updating version from $PACKAGE_VERSION to ${{ github.ref_name }}"
+          npm version ${{ github.ref_name }} --no-git-tag-version
+        else
+          echo "Version is already up to date."
+        fi
+
+    - name: Build Application
+      env:
+        GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      run: npm run dist
+
+    - name: Upload Artifacts
+      uses: actions/upload-artifact@v4
+      with:
+        name: ${{ matrix.os }}-build
+        path: |
+          dist/*.AppImage
+          dist/*.dmg
+          dist/*.exe
