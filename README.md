@@ -397,6 +397,151 @@ electron-dev/
 
 **Your Electron project files go in the root directory** alongside this README.
 
+## Building Your Electron Application
+
+Once you've developed your Electron app in this environment, you'll want to package it for distribution.
+
+### Prerequisites for Building
+
+To build distributable packages, your project needs:
+
+1. **package.json configuration** with:
+   ```json
+   {
+     "name": "my-electron-app",
+     "version": "1.0.0",
+     "main": "main.js",
+     "scripts": {
+       "start": "electron . --no-sandbox",
+       "dist": "electron-builder"
+     },
+     "devDependencies": {
+       "electron": "^33.0.0",
+       "electron-builder": "^24.0.0"
+     }
+   }
+   ```
+
+2. **electron-builder** installed as a dev dependency:
+   ```bash
+   npm install --save-dev electron-builder
+   ```
+
+3. **Build configuration** in package.json or electron-builder.yml:
+   ```json
+   "build": {
+     "appId": "com.example.myapp",
+     "productName": "My Electron App",
+     "directories": {
+       "output": "dist"
+     },
+     "mac": {
+       "target": "dmg"
+     },
+     "win": {
+       "target": "nsis"
+     },
+     "linux": {
+       "target": "AppImage"
+     }
+   }
+   ```
+
+### Building Locally
+
+To build your application locally in the Dev Container:
+
+```bash
+# Build for your current platform
+npm run dist
+
+# Build for specific platforms (requires appropriate OS or CI/CD)
+npm run dist -- --mac
+npm run dist -- --win
+npm run dist -- --linux
+```
+
+**Note:** Cross-platform builds may have limitations. For example, building macOS DMG files typically requires macOS. Use the automated release process for multi-platform builds.
+
+### Build Output
+
+After building, you'll find your distributable files in the `dist/` directory:
+* **macOS**: `.dmg` installer
+* **Windows**: `.exe` installer
+* **Linux**: `.AppImage` or other formats
+
+## Automated Release Process
+
+This repository includes a GitHub Actions workflow that automatically builds and releases your application when you create version tags.
+
+### How to Create a Release
+
+1. **Ensure your code is ready** - Test thoroughly in the development environment
+
+2. **Update your version** (optional, as the workflow can do this):
+   ```bash
+   npm version 1.0.0 --no-git-tag-version
+   ```
+
+3. **Commit any changes**:
+   ```bash
+   git add .
+   git commit -m "Prepare for release v1.0.0"
+   git push
+   ```
+
+4. **Create and push a version tag**:
+   ```bash
+   # Create a tag with semantic versioning format (MAJOR.MINOR.PATCH)
+   git tag 1.0.0
+   
+   # Push the tag to GitHub
+   git push origin 1.0.0
+   ```
+
+### What Happens During Release
+
+When you push a version tag (e.g., `1.0.0`, `2.1.3`), the GitHub Actions workflow automatically:
+
+1. **Triggers the build** - Detected by the tag format `[0-9]+.[0-9]+.[0-9]+`
+2. **Sets up build environments** - Runs on both macOS and Windows runners
+3. **Installs dependencies** - Runs `npm install`
+4. **Updates version** - Syncs package.json version with the tag
+5. **Builds the application** - Runs `npm run dist` to create installers
+6. **Uploads artifacts** - Makes builds available as GitHub Actions artifacts
+
+### Accessing Release Builds
+
+After the workflow completes:
+
+1. Go to your repository on GitHub
+2. Click on **Actions** tab
+3. Find your workflow run (named after your tag)
+4. Scroll to the **Artifacts** section at the bottom
+5. Download the builds:
+   - `macos-latest-build` - Contains `.dmg` files
+   - `windows-latest-build` - Contains `.exe` files
+
+### Customizing the Release Workflow
+
+The release workflow is defined in `.github/workflows/release.yml`. You can customize:
+
+* **Target platforms**: Edit the `matrix.os` array to include/exclude platforms
+  ```yaml
+  os: [ ubuntu-latest, macos-latest, windows-latest ]
+  ```
+* **Node.js version**: Change the `node-version` in the workflow
+* **Build artifacts**: Modify the `path` in the Upload Artifacts step
+* **Trigger conditions**: Adjust the tag pattern or add other triggers
+
+### Version Tag Format
+
+The workflow expects semantic versioning tags:
+* ✅ Valid: `1.0.0`, `2.1.3`, `10.5.2`
+* ❌ Invalid: `v1.0.0`, `1.0`, `version-1.0.0`
+
+Use pure numerical semantic versioning without prefixes.
+
 ## Advanced Usage
 
 ### Using with Existing Electron Projects
@@ -407,6 +552,7 @@ You can use this template with an existing Electron project:
 2. Open your project in VS Code
 3. Reopen in Container
 4. Ensure your start script includes `--no-sandbox`
+5. Add electron-builder configuration for building releases
 
 ### Multiple Electron Apps
 
@@ -467,7 +613,27 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ## Contributing
 
-Feel free to open issues or submit pull requests if you have suggestions for improving this development environment!
+We welcome contributions to improve this development environment!
+
+### How to Contribute
+
+1. **Fork the repository** and clone it locally
+2. **Open in Dev Container** to use the same environment
+3. **Make your changes** and test them thoroughly
+4. **Follow existing patterns** in the codebase
+5. **Submit a pull request** with a clear description of your changes
+
+### Building and Testing Changes
+
+Before submitting a PR:
+1. Ensure the Dev Container builds successfully
+2. Test the desktop GUI functionality
+3. Verify Electron apps can run with the `--no-sandbox` flag
+4. Check that all documentation is up to date
+
+### Release Process for Maintainers
+
+Maintainers can create releases by pushing semantic version tags. See the [Automated Release Process](#automated-release-process) section for details.
 
 ## Support
 
